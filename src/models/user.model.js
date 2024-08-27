@@ -49,6 +49,9 @@ User.login = function (email, Id, result) {
             p.UniqueLink,
             p.AccountType,
             p.userStatus,
+            p.messageNotificationSound,
+            p.callNotificationSound,
+            p.tagNotificationSound
             cm.communityId
      FROM users as u left join profile as p on p.UserID = u.Id AND p.AccountType in ('I','M') left join communityMembers as cm on cm.profileId = p.ID WHERE u.Email = ? OR u.Username = ? AND u.Id = ?`,
     [email, email, Id],
@@ -223,7 +226,10 @@ User.findById = async function (user_id) {
   u.Username,
   u.AccountType,
   u.IsSuspended,
-  p.ID as profileId
+  p.ID as profileId,
+  p.messageNotificationSound,
+  p.callNotificationSound,
+  p.tagNotificationSound
 FROM users as u left join profile as p on p.UserID = u.Id WHERE u.Id = ? `;
   const values = [user_id];
   const user = await executeQuery(query, values);

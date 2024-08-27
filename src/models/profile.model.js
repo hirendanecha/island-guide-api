@@ -24,6 +24,9 @@ var Profile = function (profile) {
   this.ProfilePicName = profile.ProfilePicName;
   this.IsActivated = profile.IsActive;
   this.CreatedOn = new Date();
+  this.callNotificationSound = profile.callNotificationSound;
+  this.messageNotificationSound = profile.messageNotificationSound;
+  this.tagNotificationSound = profile.tagNotificationSound;
 };
 
 Profile.create = function (profileData, result) {
@@ -100,7 +103,10 @@ Profile.FindById = async function (profileId) {
             p.DefaultUniqueLink,
             p.UniqueLink,
             p.AccountType,
-            p.userStatus
+            p.userStatus,
+            p.messageNotificationSound,
+            p.callNotificationSound,
+            p.tagNotificationSound
         FROM users as u left join profile as p on p.UserID = u.Id AND p.AccountType in ('I','M') WHERE p.ID=?`;
   const values = profileId;
   let profile = await executeQuery(query, values);
@@ -185,6 +191,17 @@ Profile.editNotifications = function (id, isRead, result) {
       }
     }
   );
+};
+
+Profile.editNotificationSound = function (id, key, value) {
+  try {
+    const query = `update profile set ${key} = '${value}' where ID = ${id}`;
+    console.log(query);
+    const data = executeQuery(query);
+    return data;
+  } catch (error) {
+    return error;
+  }
 };
 
 Profile.deleteNotification = function (user_id, result) {
